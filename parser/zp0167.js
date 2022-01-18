@@ -43,7 +43,7 @@ const ZP0167 = (data, idx) => {
             입금일자             : data.slice(idx, idx+=8),
             FILLER               : data.slice(idx, idx+=372)
         })
-    }
+    };
 
     trailerRecord.push({
         업무구분                 : data.slice(idx, idx+=6),
@@ -56,7 +56,7 @@ const ZP0167 = (data, idx) => {
         가맹점수수료공급가액합계 : Number(data.slice(idx, idx+=12)),
         가맹점수수료부가세액합계 : Number(data.slice(idx, idx+=12)),
         FILLER                   : data.slice(idx, idx+=425),
-    })
+    });
 
     dataRecord.forEach(record => {
         console.log(record);

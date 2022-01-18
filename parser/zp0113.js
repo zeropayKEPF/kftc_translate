@@ -12,12 +12,18 @@ const ZP0113 = (data, idx) => {
     }
 
     const dataLength = Number(headerRecord.총_DATA_RECORD_수)
-    let dataRecord = [], trailerRecord = []
-    
-    console.log('총_DATA_RECORD_수', dataLength); // 694건
+    console.log(dataLength);
+    let dataRecord = new Array(Math.ceil(dataLength / MAX_LIMIT))
+    for (let i = 0; i < dataRecord.length;i++){
+        dataRecord[i] = new Array(0);
+    }
+    let trailerRecord = [];
 
+    var sheetNum = 0;
     for (let i = 0; i < dataLength; i++){
-        dataRecord.push({
+        if (i != 0 && i % MAX_LIMIT == 0) sheetNum++;
+        
+        dataRecord[sheetNum].push({
             업무구분           : data.slice(idx, idx+=6),
             데이터구분         : data.slice(idx, idx+=2),
             일련번호           : data.slice(idx, idx+=8),
@@ -55,13 +61,8 @@ const ZP0113 = (data, idx) => {
         FILLER :            data.slice(idx, idx+=637),
     })
 
-    
-    const nb = xlsx.utils.book_new();
-    const dataSheet = xlsx.utils.json_to_sheet(dataRecord);
-    const trailerSheet = xlsx.utils.json_to_sheet(trailerRecord);
-
-    xlsx.utils.book_append_sheet(nb, dataSheet, '본 내역');
-    xlsx.utils.book_append_sheet(nb, trailerSheet, '내역 합');
-
-    xlsx.writeFile(nb, `./xlsFile/${headerRecord.업무구분}_${headerRecord.거래기준일}.xlsx`);
+    dataRecord.forEach(record => {
+        console.log(record);
+        exportFile(headerRecord, record, trailerRecord)
+    })
 }

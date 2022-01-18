@@ -1,7 +1,7 @@
 const $fileUpload = document.getElementById("file_upload");
 const $trButton = document.getElementById('tr_button');
 const $taskText = document.getElementById('task-text');
-
+const MAX_LIMIT = 300000
 
 $fileUpload.addEventListener('change', async (e) => {
     var file = e.target.files[0];
@@ -13,7 +13,6 @@ $fileUpload.addEventListener('change', async (e) => {
     execute(fileText);
 })
     
-const MAX_LIMIT = 300000
 
 const execute = async (data) => {
     let idx = 0;
@@ -56,5 +55,5 @@ function exportFile(headerRecord, dataRecord, trailerRecord) {
     xlsx.utils.book_append_sheet(nb, trailerSheet, '내역 합');
 
     $taskText.textContent = '엑셀 내보내기 중...';
-    xlsx.writeFile(nb, `./xlsFile/${headerRecord.업무구분}_${headerRecord.거래기준일}.xlsx`);
+    xlsx.writeFile(nb, `${headerRecord.업무구분}_${headerRecord.거래기준일}.xlsx`);
 }
