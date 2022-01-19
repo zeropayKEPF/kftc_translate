@@ -6,31 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>원장 - 엑셀 변환 | v0.3</title>
 
-    <!-- Bootstrap CDN -->
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="./assets/bootstrap.min.css" />
 </head>
 <body>
+  <div class="container jumbotron" style="padding : 2%">
+    <h3 class="display-4">원장 → 엑셀 변환</h1>
+    
+    <hr class="my-4">
+    
+    <div class="file">
+      <p class="lead">원장파일 업로드</p>
+      <input type="file" id="file_upload"/>
+    </div>
+
+    <hr class="my-4">
+
+    <p class="lead">진행상황</p>
+    <ul id="progress-list"> </ul>
+
+  </div>
+<!-- 
     <div class="container">
-        <div class="file">
-            <label for="file_upload" id="file_label">원장파일 업로드</label>
-            <input type="file" id="file_upload"/>
-          </div>
+        
           
           <h1 id="task-text"></h1>
-    </div>
+    </div> -->
 </body>
 
-<!-- XLSX CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+<script src="./assets/xlsx.full.min.js"></script>
 <script>
   var xlsx = XLSX;
 </script>
-<script src="./parser/zp0113.js"></script>
-<script src="./parser/zp0123.js"></script>
-<script src="./parser/zp0167.js"></script>
-<script src="./parser/zp0168.js"></script>
+<script src="./parser/dataModel.js"></script>
+<script src="./parser/parser.js"></script>
+<script src="./util/index.js"></script>
 <script src="./index.js"></script>
 </html>

@@ -1,59 +1,33 @@
 const $fileUpload = document.getElementById("file_upload");
 const $trButton = document.getElementById('tr_button');
-const $taskText = document.getElementById('task-text');
+const $progressList = document.getElementById('progress-list');
 const MAX_LIMIT = 300000
 
 $fileUpload.addEventListener('change', async (e) => {
+    $progressList.innerHTML = '';
+
+    log("파일 업로드 중입니다.")
     var file = e.target.files[0];
-    
-    $taskText.textContent = "파일 업로드 중입니다...";
-    var fileText = await file.text();
 
-    
-    execute(fileText);
-})
+    log("데이터를 읽고 있습니다.");
+    execute(await file.text());
+});
     
 
-const execute = async (data) => {
-    let idx = 0;
+function execute (data) {
     let headerBiz = data.slice(0, 6);
     
-    console.log('업무구분 : ', headerBiz);
+    var idx = 0;
 
-    $taskText.textContent  = headerBiz + "작업 중입니다...";
-
+    var { headerRecord, idx }  = headerParsing(headerBiz, data, idx);
+    var { dataRecord, idx }    = dataParsing(headerBiz, data, idx, headerRecord);
+    var { trailerRecord, idx } = trailerParsing(headerBiz, data, idx);
     
-    switch (headerBiz) {
-        case 'ZP0113': {
-            await ZP0113(data, idx);
-            break;
-        }
-        case 'ZP0123': {
-            await ZP0123(data, idx);
-            break;
-        }
-        case 'ZP0167': {
-            await ZP0167(data, idx);
-            break;
-        }
-        case 'ZP0168': {
-            await ZP0168(data, idx);
-            break;
-        }
-    };
-    $taskText.textContent = headerBiz + " 작업완료! (다운로드를 확인해주세요)";
+    dataRecord.forEach(record => {
+        exportFile([headerRecord], record, [trailerRecord]);
+    });
+    
+    log(headerBiz + " 작업완료! (다운로드를 확인해주세요)");
 }
 
-function exportFile(headerRecord, dataRecord, trailerRecord) {
-    var nb = xlsx.utils.book_new();
-    
-    var dataSheet = xlsx.utils.json_to_sheet(dataRecord);
-    var trailerSheet = xlsx.utils.json_to_sheet(trailerRecord);
 
-    $taskText.textContent = '엑셀 변환 완료, 엑셀 내보내기 실행 시작';
-    xlsx.utils.book_append_sheet(nb, dataSheet, '본 내역');
-    xlsx.utils.book_append_sheet(nb, trailerSheet, '내역 합');
-
-    $taskText.textContent = '엑셀 내보내기 중...';
-    xlsx.writeFile(nb, `${headerRecord.업무구분}_${headerRecord.거래기준일}.xlsx`);
-}
